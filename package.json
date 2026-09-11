@@ -1,0 +1,23 @@
+﻿{
+  "name": "web-lighthouse-performance-monitor",
+  "version": "1.0.0",
+  "description": "Beginner-friendly Web Lighthouse Performance Monitor and Playwright Login Automation",
+  "main": "lighthouse/runner.js",
+  "type": "module",
+  "scripts": {
+    "audit": "node lighthouse/runner.js"
+  },
+  "keywords": [
+    "lighthouse",
+    "performance",
+    "web-audit",
+    "playwright",
+    "flask"
+  ],
+  "author": "Web Performance Monitor Team",
+  "license": "MIT",
+  "dependencies": {
+    "chrome-launcher": "^1.1.2",
+    "lighthouse": "^12.3.0"
+  }
+}
