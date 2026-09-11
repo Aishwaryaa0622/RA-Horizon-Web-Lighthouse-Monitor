@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RA Horizon Web LightHouse Performance Monitor</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <!-- Google Fonts for clean typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Application Header -->
+    <header class="app-header">
+      <div class="logo-area">
+        <span class="logo-icon">⚡</span>
+        <h1>RA Horizon Web LightHouse Performance Monitor</h1>
+      </div>
+      <p class="app-subtitle">
+        Enter any public website URL below to run an automated Google Lighthouse audit and get instant scores, performance insights, and beginner-friendly fix recommendations.
+      </p>
+    </header>
+
+    <!-- Audit Input Form Card -->
+    <main>
+      <section class="card form-card">
+        <form id="auditForm" novalidate>
+          <label for="urlInput" class="form-label">Enter a website URL:</label>
+          <div class="input-group">
+            <input 
+              type="url" 
+              id="urlInput" 
+              name="url" 
+              class="url-input" 
+              placeholder="https://example.com" 
+              required 
+              autocomplete="off"
+            >
+            <button type="submit" id="submitBtn" class="btn btn-primary">
+              <span class="btn-text">Run Lighthouse Audit</span>
+              <span class="btn-spinner" aria-hidden="true"></span>
+            </button>
+          </div>
+
+          <!-- Quick Try Sample URLs -->
+          <div class="quick-samples">
+            <span class="samples-label">Quick test examples:</span>
+            <button type="button" class="sample-chip" data-url="https://example.com">https://example.com</button>
+            <button type="button" class="sample-chip" data-url="https://httpbin.org/html">https://httpbin.org/html</button>
+            <button type="button" class="sample-chip" data-url="https://google.com">https://google.com</button>
+          </div>
+        </form>
+
+        <!-- Dynamic Error Banner -->
+        <div id="errorBanner" class="alert alert-danger" style="display: none;" role="alert">
+          <span class="alert-icon">⚠️</span>
+          <span id="errorMessage" class="alert-text"></span>
+        </div>
+      </section>
+
+      <!-- Loading State Section -->
+      <section id="loadingSection" class="card loading-card" style="display: none;" aria-live="polite">
+        <div class="spinner-large"></div>
+        <h2 class="loading-title">Running Lighthouse Audit...</h2>
+        <p class="loading-desc">This may take a few moments as Chrome visits the site and measures performance metrics.</p>
+        <div class="loading-steps">
+          <span class="step-badge active">Connecting to site</span>
+          <span class="step-badge">Analyzing metrics</span>
+          <span class="step-badge">Generating report</span>
+        </div>
+      </section>
+
+      <!-- Results Display Section -->
+      <section id="resultsSection" class="results-section" style="display: none;">
+        <!-- Top Summary Card -->
+        <div class="card summary-card" id="summaryCard">
+          <div class="summary-header">
+            <div>
+              <span class="summary-meta-label">Audited Website:</span>
+              <h2 id="resultUrl" class="result-url">https://example.com</h2>
+            </div>
+            <div id="summaryBadge" class="tier-badge">Excellent</div>
+          </div>
+          <p id="summaryMessage" class="summary-message">
+            Your website has an excellent performance score!
+          </p>
+        </div>
+
+        <!-- Scores Grid (4 Categories) -->
+        <div class="scores-grid">
+          <!-- Performance -->
+          <div class="card score-card" id="cardPerformance">
+            <div class="score-card-header">
+              <h3>Performance</h3>
+              <span class="score-icon">🚀</span>
+            </div>
+            <div class="score-display">
+              <span id="scorePerformance" class="score-number">0</span>
+              <span class="score-max">/100</span>
+            </div>
+            <div class="progress-bar-container">
+              <div id="progressPerformance" class="progress-bar" style="width: 0%;"></div>
+            </div>
+            <p class="score-desc">Measures loading speed, responsiveness, and visual stability.</p>
+          </div>
+
+          <!-- Accessibility -->
+          <div class="card score-card" id="cardAccessibility">
+            <div class="score-card-header">
+              <h3>Accessibility</h3>
+              <span class="score-icon">♿</span>
+            </div>
+            <div class="score-display">
+              <span id="scoreAccessibility" class="score-number">0</span>
+              <span class="score-max">/100</span>
+            </div>
+            <div class="progress-bar-container">
+              <div id="progressAccessibility" class="progress-bar" style="width: 0%;"></div>
+            </div>
+            <p class="score-desc">Checks usability for people with disabilities and screen readers.</p>
+          </div>
+
+          <!-- Best Practices -->
+          <div class="card score-card" id="cardBestPractices">
+            <div class="score-card-header">
+              <h3>Best Practices</h3>
+              <span class="score-icon">🛡️</span>
+            </div>
+            <div class="score-display">
+              <span id="scoreBestPractices" class="score-number">0</span>
+              <span class="score-max">/100</span>
+            </div>
+            <div class="progress-bar-container">
+              <div id="progressBestPractices" class="progress-bar" style="width: 0%;"></div>
+            </div>
+            <p class="score-desc">Ensures modern web security, HTTPS, and clean web standards.</p>
+          </div>
+
+          <!-- SEO -->
+          <div class="card score-card" id="cardSeo">
+            <div class="score-card-header">
+              <h3>SEO</h3>
+              <span class="score-icon">🔍</span>
+            </div>
+            <div class="score-display">
+              <span id="scoreSeo" class="score-number">0</span>
+              <span class="score-max">/100</span>
+            </div>
+            <div class="progress-bar-container">
+              <div id="progressSeo" class="progress-bar" style="width: 0%;"></div>
+            </div>
+            <p class="score-desc">Optimizes content for search engines like Google and Bing.</p>
+          </div>
+        </div>
+
+        <!-- Recommendations Section -->
+        <div class="card recommendations-card">
+          <div class="recs-header">
+            <h2>Recommended Fixes & Opportunities</h2>
+            <span id="recsCountBadge" class="count-badge">0 issues</span>
+          </div>
+          <p class="recs-intro">
+            These practical recommendations explain what problems were detected, why they matter for your users, and how to fix them.
+          </p>
+
+          <div id="recommendationsList" class="recommendations-list">
+            <!-- Dynamically populated via JavaScript -->
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <p>Built with Python Flask & Google Lighthouse • Beginner-Friendly Web Performance Monitor</p>
+    </footer>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
